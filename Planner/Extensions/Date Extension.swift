@@ -9,6 +9,13 @@
 import Foundation
 
 extension Date {
+    
+    static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        return formatter
+    }()
+    
     var today: Date {
         return shiftDay(by: 0)
     }

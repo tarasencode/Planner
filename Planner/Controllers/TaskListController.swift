@@ -10,16 +10,15 @@ import UIKit
 
 class TaskListController: UITableViewController {
     
-    let db = DataBase()
+    let taskDao = TaskDaoImp.current
+    let categoryDao = CategoryDaoImp.current
+    let priorityDao = PriorityDaoImp.current
     
     private var taskList: [Task]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//db.initTestData()
-        
-        taskList = db.getAllTasks()
+        taskList = taskDao.getAll()
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -27,6 +26,7 @@ class TaskListController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
+
     
     // MARK: - Table view data source
 
@@ -66,44 +66,34 @@ class TaskListController: UITableViewController {
         
         if let deadline = task.deadline {
             let daysLeft = deadline.getOffset(from: Date().today)
-            let daysLeftString: String
+            var daysLeftString = ""
             
             switch daysLeft {
             case 0:
                 daysLeftString = "Today"
             case 1:
                 daysLeftString = "Tomorrow"
+            case -1:
+                daysLeftString = "\(daysLeft) day"
+                cell.taskDeadlineLabel.textColor = .red
             case ..<0:
-                daysLeftString = "\(daysLeft) d."
+                daysLeftString = "\(daysLeft) days"
                 cell.taskDeadlineLabel.textColor = .red
             default:
-                daysLeftString = "\(daysLeft) d."
+                daysLeftString = "\(daysLeft) days"
             }
             cell.taskDeadlineLabel.text = daysLeftString
         }
         
-        if let info = task.info, info.count > 0 {
-            cell.taskInfoButton.isHidden = false
-        }
         
         return cell
     }
-    
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
     
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             
-            db.deleteTask(taskList[indexPath.row])
+            taskDao.delete(taskList[indexPath.row])
             taskList.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
@@ -126,14 +116,55 @@ class TaskListController: UITableViewController {
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        switch segue.identifier {
+        case "showDetails":
+            guard let dvc = segue.destination as? TaskDetailsController else {
+                fatalError("segue error")
+            }
+            
+            let index = tableView.indexPathForSelectedRow!.row
+            dvc.task = taskList[index]
+            
+            dvc.navigationItem.title = "Task details"
+        case "newTask":
+            guard let nc = segue.destination as? UINavigationController,
+                let dvc = nc.viewControllers.first as? TaskDetailsController else {
+                fatalError("segue error")
+            }
+            dvc.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
+            dvc.navigationItem.title = "New Task"
+        default:
+            return
+        }
     }
-    */
+    
+    // MARK: unwind
+    
+    @objc func cancelTapped() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func unwindToTaskListAndSave(segue: UIStoryboardSegue) { //FIXME: better name
+        guard let indexPath = tableView.indexPathForSelectedRow else {
+            return
+        }
+        
+        switch segue.identifier {
+        case "deleteTask":
+            taskDao.delete(taskList[indexPath.row])
+            taskList.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        case "saveTask":
+            taskDao.save()
+            tableView.reloadRows(at: [indexPath], with: .fade)
+        default:
+            return
+        }
 
+    }
 }
