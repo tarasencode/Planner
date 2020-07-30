@@ -11,15 +11,10 @@ import UIKit
 class TaskListController: UITableViewController {
     
     let taskDao = TaskDaoImp.current
-//    let categoryDao = CategoryDaoImp.current
-//    let priorityDao = PriorityDaoImp.current
-    
-    private var taskList: [Task]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        taskList = taskDao.getAll()
-
+        
     }
 
     
@@ -30,7 +25,7 @@ class TaskListController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return taskList.count
+        return taskDao.items.count
     }
 
     
@@ -38,10 +33,13 @@ class TaskListController: UITableViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath) as? TaskListCell else {
             fatalError("There should be TaskListCell")
         }
-        let task = taskList[indexPath.row]
+        cell.delegate = self
+        
+        let task = taskDao.items[indexPath.row]
         
         cell.taskNameLabel.text = task.name
         cell.taskCategoryLabel.text = (task.category?.name ?? "")
+        cell.checkmarkButton.isSelected = task.completed
         
         if let priority = task.priority {
             var priorityColor: UIColor?
@@ -88,8 +86,8 @@ class TaskListController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             
-            taskDao.delete(taskList[indexPath.row])
-            taskList.remove(at: indexPath.row)
+            taskDao.delete(taskDao.items[indexPath.row])
+            taskDao.items.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
@@ -123,7 +121,7 @@ class TaskListController: UITableViewController {
             }
             
             let index = tableView.indexPathForSelectedRow!.row
-            dvc.task = taskList[index]
+            dvc.task = taskDao.items[index]
             
             dvc.navigationItem.title = "Task details"
         case "newTask":
@@ -151,8 +149,8 @@ class TaskListController: UITableViewController {
         
         switch segue.identifier {
         case "deleteTask":
-            taskDao.delete(taskList[indexPath.row])
-            taskList.remove(at: indexPath.row)
+            taskDao.delete(taskDao.items[indexPath.row])
+            taskDao.items.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         case "saveTask":
             taskDao.save()
@@ -161,5 +159,14 @@ class TaskListController: UITableViewController {
             return
         }
 
+    }
+}
+
+extension TaskListController: TaskListCellDelegate {
+    func checkButtonTapped(sender: TaskListCell) {
+        if let indexPath = tableView.indexPath(for: sender) {
+            taskDao.items[indexPath.row].completed.toggle()
+            taskDao.save()
+        }
     }
 }

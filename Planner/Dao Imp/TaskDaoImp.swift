@@ -20,7 +20,9 @@ class TaskDaoImp: Crud {
     
     // singleton
     static let current = TaskDaoImp()
-    private init() {}
+    private init() {
+        _ = getAll() // FIXME: stupid 
+    }
     
     
     // MARK: DAO

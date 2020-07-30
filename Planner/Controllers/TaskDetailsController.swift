@@ -16,12 +16,17 @@ class TaskDetailsController: UITableViewController {
     @IBOutlet weak var taskDeadlineField: UITextField!
     @IBOutlet weak var taskInfoView: UITextView!
     @IBOutlet weak var deadlineDatePicker: UIDatePicker!
+    @IBOutlet weak var checkmarkButton: UIButton!
     
     var task:Task?
     
     var isPickerHidden = true
 
-
+    @IBAction func checkmarkButtonTapped(_ sender: UIButton) {
+        sender.isSelected.toggle()
+        task?.completed.toggle()
+    }
+    
     @IBAction func enterButtonTapped(_ sender: UITextField) {
         sender.resignFirstResponder()
     }
@@ -41,7 +46,17 @@ class TaskDetailsController: UITableViewController {
         tableView.beginUpdates()
         tableView.endUpdates()
     }
-
+    
+    @IBAction func deleteButtonTapped(_ sender: Any) {
+        let completiton: (UIAlertAction) -> Void  = {_ in self.performSegue(withIdentifier: "deleteTask", sender: sender)}
+        let dialogMessage = UIAlertController(title: "Confirmation", message: "Task will be deleted. Are you sure?", preferredStyle: .actionSheet)
+        let delete = UIAlertAction(title: "Delete", style: .destructive, handler:  completiton)
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        dialogMessage.addAction(delete)
+        dialogMessage.addAction(cancel)
+        present(dialogMessage, animated: true, completion: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing))
@@ -56,6 +71,7 @@ class TaskDetailsController: UITableViewController {
         super .viewWillAppear(animated)
         
         if let task = task {
+            checkmarkButton.isSelected = task.completed
             taskNameField.text = task.name
             taskCategoryLabel.text = task.category?.name
             taskPriorityLabel.text = task.priority?.name
