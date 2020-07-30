@@ -11,6 +11,3 @@ protocol ActionResultDelegate {
     func save(source: UIViewController, data: Any?)
 }
 
-extension ActionResultDelegate {
-    
-}

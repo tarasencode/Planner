@@ -20,6 +20,8 @@
 		7C51BB3524CC504F002147E2 /* TaskListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB3424CC504F002147E2 /* TaskListCell.swift */; };
 		7C51BB3824CC598E002147E2 /* Planner.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7C51BB3624CC598E002147E2 /* Planner.xcdatamodeld */; };
 		7C5337EB24CDAC0700EEB7C0 /* Date Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5337EA24CDAC0700EEB7C0 /* Date Extension.swift */; };
+		7C589EBC24D2CC53000BDE87 /* OptionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C589EBB24D2CC53000BDE87 /* OptionsController.swift */; };
+		7C589EBF24D2D06E000BDE87 /* OptionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C589EBE24D2D06E000BDE87 /* OptionType.swift */; };
 		7C756B0024CEBE99009D3052 /* CrudExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C756AFF24CEBE99009D3052 /* CrudExtension.swift */; };
 		7C756B0424CF0762009D3052 /* TaskDetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C756B0324CF0762009D3052 /* TaskDetailsController.swift */; };
 /* End PBXBuildFile section */
@@ -40,6 +42,8 @@
 		7C51BB3424CC504F002147E2 /* TaskListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListCell.swift; sourceTree = "<group>"; };
 		7C51BB3724CC598E002147E2 /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		7C5337EA24CDAC0700EEB7C0 /* Date Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date Extension.swift"; sourceTree = "<group>"; };
+		7C589EBB24D2CC53000BDE87 /* OptionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsController.swift; sourceTree = "<group>"; };
+		7C589EBE24D2D06E000BDE87 /* OptionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionType.swift; sourceTree = "<group>"; };
 		7C756AFF24CEBE99009D3052 /* CrudExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrudExtension.swift; sourceTree = "<group>"; };
 		7C756B0324CF0762009D3052 /* TaskDetailsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -100,6 +104,7 @@
 		7C51BB1824CC086F002147E2 /* Planner */ = {
 			isa = PBXGroup;
 			children = (
+				7C589EBD24D2D050000BDE87 /* Objects */,
 				7C0A8A7C24D189390018CD7A /* Delegates */,
 				7C1F3A7024CEAA9300FB7507 /* Dao Imp */,
 				7C1F3A6F24CEAA8A00FB7507 /* DAO */,
@@ -120,6 +125,7 @@
 			children = (
 				7C51BB2E24CC2D73002147E2 /* TaskListController.swift */,
 				7C756B0324CF0762009D3052 /* TaskDetailsController.swift */,
+				7C589EBB24D2CC53000BDE87 /* OptionsController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -148,6 +154,14 @@
 				7C756AFF24CEBE99009D3052 /* CrudExtension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		7C589EBD24D2D050000BDE87 /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				7C589EBE24D2D06E000BDE87 /* OptionType.swift */,
+			);
+			path = Objects;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -223,12 +237,14 @@
 			files = (
 				7C1F3A7824CEAD3800FB7507 /* CategoryDaoImp.swift in Sources */,
 				7C0A8A7E24D189590018CD7A /* ActionResultDelegate.swift in Sources */,
+				7C589EBF24D2D06E000BDE87 /* OptionType.swift in Sources */,
 				7C1F3A7A24CEB17B00FB7507 /* PriorityDaoImp.swift in Sources */,
 				7C5337EB24CDAC0700EEB7C0 /* Date Extension.swift in Sources */,
 				7C1F3A7C24CEB7A700FB7507 /* TaskDaoImp.swift in Sources */,
 				7C51BB3524CC504F002147E2 /* TaskListCell.swift in Sources */,
 				7C51BB3824CC598E002147E2 /* Planner.xcdatamodeld in Sources */,
 				7C51BB1A24CC086F002147E2 /* AppDelegate.swift in Sources */,
+				7C589EBC24D2CC53000BDE87 /* OptionsController.swift in Sources */,
 				7C756B0024CEBE99009D3052 /* CrudExtension.swift in Sources */,
 				7C51BB2F24CC2D73002147E2 /* TaskListController.swift in Sources */,
 				7C1F3A7224CEAAC700FB7507 /* Crud.swift in Sources */,

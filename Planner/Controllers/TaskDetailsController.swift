@@ -18,8 +18,9 @@ class TaskDetailsController: UITableViewController {
     @IBOutlet weak var deadlineDatePicker: UIDatePicker!
     
     var task:Task?
+    
     var isPickerHidden = true
-    var firstShow = true
+
 
     @IBAction func enterButtonTapped(_ sender: UITextField) {
         sender.resignFirstResponder()
@@ -43,8 +44,16 @@ class TaskDetailsController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
         
         deadlineDatePicker.date = Date().shiftDay(by: 1)
+
+    }
+ 
+    override func viewWillAppear(_ animated: Bool) {
+        super .viewWillAppear(animated)
         
         if let task = task {
             taskNameField.text = task.name
@@ -59,12 +68,7 @@ class TaskDetailsController: UITableViewController {
         }
         
         updateSaveButtonState()
-        
-        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing))
-        tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
     }
-    
     
     func updateSaveButtonState() {
         navigationItem.rightBarButtonItem?.isEnabled = taskNameField.hasText
@@ -94,16 +98,32 @@ class TaskDetailsController: UITableViewController {
     // MARK: - Navigation
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) { // FIXME: validation
-        task?.name = taskNameField.text
-        task?.category?.name = taskCategoryLabel.text
-        task?.priority?.name = taskPriorityLabel.text
-        
-        if taskDeadlineField.hasText {
-            task?.deadline = deadlineDatePicker.date
-        } else {
-            task?.deadline = nil
+        switch segue.identifier {
+        case "selectCategory":
+            if let ovc = segue.destination as? OptionsController {
+                ovc.task = task
+                ovc.option = .category
+                ovc.title = "Category"
+            }
+        case "selectPriority":
+            if let ovc = segue.destination as? OptionsController {
+                ovc.task = task
+                ovc.option = .priority
+                ovc.title = "Priority"
+            }
+        default:
+            task?.name = taskNameField.text
+            task?.category?.name = taskCategoryLabel.text
+            task?.priority?.name = taskPriorityLabel.text
+            
+            if taskDeadlineField.hasText {
+                task?.deadline = deadlineDatePicker.date
+            } else {
+                task?.deadline = nil
+            }
+            task?.info = taskInfoView.text
         }
-        task?.info = taskInfoView.text
+
     }
 }
 
@@ -115,5 +135,5 @@ extension TaskDetailsController: UITextFieldDelegate {
         default:
             return true
         }
-    } 
+    }
 }

@@ -11,8 +11,8 @@ import UIKit
 class TaskListController: UITableViewController {
     
     let taskDao = TaskDaoImp.current
-    let categoryDao = CategoryDaoImp.current
-    let priorityDao = PriorityDaoImp.current
+//    let categoryDao = CategoryDaoImp.current
+//    let priorityDao = PriorityDaoImp.current
     
     private var taskList: [Task]!
     
@@ -20,11 +20,6 @@ class TaskListController: UITableViewController {
         super.viewDidLoad()
         taskList = taskDao.getAll()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
     

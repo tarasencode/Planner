@@ -56,8 +56,8 @@
                                             <state key="normal" image="unchecked"/>
                                             <state key="selected" image="checked"/>
                                         </button>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="100 d." textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JXI-KD-b1I">
-                                            <rect key="frame" x="305.5" y="23" width="35.5" height="14"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="100 days" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JXI-KD-b1I">
+                                            <rect key="frame" x="290.5" y="23" width="50.5" height="14"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
@@ -284,7 +284,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pue-AG-Xj8">
-                                                    <rect key="frame" x="148" y="7" width="78" height="30"/>
+                                                    <rect key="frame" x="148.5" y="7" width="78" height="30"/>
                                                     <state key="normal" title="Delete task">
                                                         <color key="titleColor" name="hiPriority"/>
                                                     </state>
@@ -328,16 +328,16 @@
             </objects>
             <point key="canvasLocation" x="1742" y="25"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Options Controller-->
         <scene sceneID="ZcZ-Ef-tfz">
             <objects>
-                <tableViewController id="uit-nA-pgj" sceneMemberID="viewController">
+                <tableViewController id="uit-nA-pgj" customClass="OptionsController" customModule="Planner" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Vbt-sa-cP8">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="itemCell" id="SVD-P7-3QW">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="itemCell" id="SVD-P7-3QW">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="SVD-P7-3QW" id="Ojr-Dp-shB">
@@ -401,7 +401,7 @@
         </namedColor>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="vna-Dd-7eZ"/>
+        <segue reference="xWD-cL-OV0"/>
         <segue reference="OOr-l5-ez0"/>
     </inferredMetricsTieBreakers>
 </document>
