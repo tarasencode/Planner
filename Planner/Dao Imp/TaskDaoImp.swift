@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-class TaskDaoImp: Crud {
+class TaskDaoImp: TaskDao {
     
     typealias Item = Task
     
@@ -46,8 +46,26 @@ class TaskDaoImp: Crud {
         return items
     }
     
-    func delete(_ priority: Task) {
-        context.delete(priority)
+    func delete(_ item: Task) {
+        context.delete(item)
         save()
+    }
+    
+    func search(text: String) -> [Task] {
+        let fetchRequest: NSFetchRequest<Task> = Task.fetchRequest()
+        
+        var params = [Any]()
+        var sql = "name CONTAINS[c] %@"
+        
+        params.append(text)
+        var predicate = NSPredicate(format: sql, argumentArray: params)
+        fetchRequest.predicate = predicate
+        do {
+            items = try context.fetch(fetchRequest)
+        } catch {
+            fatalError("Fetch failed")
+        }
+        
+        return items
     }
 }
