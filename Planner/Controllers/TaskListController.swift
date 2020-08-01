@@ -26,6 +26,12 @@ class TaskListController: UITableViewController {
         super.viewDidLoad()
         
         setupSearchController()
+        if #available(iOS 13, *) { // searchbar bugfix
+            
+        } else {
+            navigationItem.searchController = searchController
+            navigationItem.hidesSearchBarWhenScrolling = true
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -36,6 +42,17 @@ class TaskListController: UITableViewController {
         }
         
         super .viewWillAppear(animated)
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        if #available(iOS 13, *) { // searchbar bugfix
+            navigationItem.searchController = searchController
+            navigationItem.hidesSearchBarWhenScrolling = true
+        } else {
+
+        }
     }
     
     // MARK: - Table view data source
@@ -54,7 +71,6 @@ class TaskListController: UITableViewController {
             return 0
         }
     }
-
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
@@ -252,15 +268,9 @@ extension TaskListController: UISearchBarDelegate, UISearchResultsUpdating {
         searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
         
-        searchController.searchBar.placeholder = "Enter task name"
-        searchController.searchBar.backgroundColor = .white
         searchController.searchBar.delegate = self
         searchController.searchResultsUpdater = self
         
         searchController.searchBar.showsScopeBar = false
-        
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = true
-
     }
 }

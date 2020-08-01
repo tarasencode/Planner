@@ -126,7 +126,7 @@
                             <outlet property="delegate" destination="khd-PT-o3S" id="9nf-we-CUw"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Planner" id="PgF-ZI-eLn">
+                    <navigationItem key="navigationItem" title="Planner" largeTitleDisplayMode="always" id="PgF-ZI-eLn">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="ZH6-Kr-xX4">
                             <connections>
                                 <segue destination="Cfs-UV-gM6" kind="presentation" identifier="newTask" id="dAB-To-BAk"/>
@@ -362,7 +362,7 @@
                             <outlet property="delegate" destination="QNS-ud-eAp" id="muN-Tj-3F1"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Edit" id="Lf7-wT-ol1">
+                    <navigationItem key="navigationItem" title="Edit" largeTitleDisplayMode="never" id="Lf7-wT-ol1">
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="b6U-nG-aTi">
                             <connections>
                                 <segue destination="UgR-9Y-aqS" kind="unwind" identifier="saveTask" unwindAction="unwindToTaskListAndSaveWithSegue:" id="DXk-vd-PVr"/>
@@ -443,8 +443,8 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="X4l-r2-J3O" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="JJM-Zm-kyQ">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="JJM-Zm-kyQ">
+                        <rect key="frame" x="0.0" y="20" width="375" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
