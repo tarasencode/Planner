@@ -8,25 +8,32 @@
 
 import UIKit
 
-class TaskDetailsController: UITableViewController {
+class TaskDetailsController: UITableViewController, UITextViewDelegate {
     
+    @IBOutlet weak var checkmarkButton: UIButton!
     @IBOutlet weak var taskNameField: UITextField!
     @IBOutlet weak var taskCategoryLabel: UILabel!
     @IBOutlet weak var taskPriorityLabel: UILabel!
     @IBOutlet weak var taskDeadlineField: UITextField!
-    @IBOutlet weak var taskInfoView: UITextView!
+    @IBOutlet weak var resetButton: UIButton!
     @IBOutlet weak var deadlineDatePicker: UIDatePicker!
-    @IBOutlet weak var checkmarkButton: UIButton!
+    @IBOutlet weak var taskInfoView: UITextView! {
+        didSet {
+            taskInfoView.delegate = self
+        }
+    }
     @IBOutlet weak var deleteTaskButton: UIButton!
     
-    var task:Task?
+    var task:Task!
     
     var isPickerHidden = true
     var isNewTask = false
     
+    let pickerIndexPath = IndexPath(row: 1, section: 3)
+    
     @IBAction func checkmarkButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
-        task?.completed.toggle()
+        task.completed.toggle()
     }
     
     @IBAction func enterButtonTapped(_ sender: UITextField) {
@@ -41,15 +48,25 @@ class TaskDetailsController: UITableViewController {
         updateDeadlineField(date: sender.date)
     }
     
+
     @IBAction func deadlineTapped(_ sender: Any) {
-        if isNewTask {
-            taskDeadlineField.text = Date.dateFormatter.string(from: deadlineDatePicker.date)
-            isNewTask = false
+        if !taskDeadlineField.hasText {
+            updateDeadlineField(date: deadlineDatePicker.date)
         }
+        isPickerHidden.toggle()
         
-        self.view.endEditing(true)
-        isPickerHidden = !isPickerHidden
+        view.endEditing(true)
         taskDeadlineField.textColor = isPickerHidden ? .black : tableView.tintColor
+        tableView.beginUpdates()
+        tableView.endUpdates()
+    }
+    
+    @IBAction func resetButtonTapped(_ sender: UIButton) {
+        task.deadline = nil
+        taskDeadlineField.text = nil
+        
+        sender.isHidden = true
+        isPickerHidden = true
         tableView.beginUpdates()
         tableView.endUpdates()
     }
@@ -64,78 +81,116 @@ class TaskDetailsController: UITableViewController {
         present(dialogMessage, animated: true, completion: nil)
     }
     
+    @IBAction func fieldEditingFinished(_ sender: UITextField) {
+        if let taskName = taskNameField.text?.trimmingCharacters(in: .whitespaces),
+            taskName.count > 0 {
+            task.name = taskName
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        task.info = taskInfoView.text
+    }
+    
+    // MARK: Functions
+    
+    func updateSaveButtonState() {
+        navigationItem.rightBarButtonItem?.isEnabled = isNameFilled()
+    }
+    
+    func updateDeadlineField(date: Date) {
+        taskDeadlineField.text = Date.dateFormatter.string(from: deadlineDatePicker.date)
+        task.deadline = deadlineDatePicker.date
+        resetButton.isHidden = false
+    }
+    
+    func isNameFilled() -> Bool {
+        if let count = taskNameField.text?.trimmingCharacters(in: .whitespaces).count,
+            count > 0 {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
         
+        
         deadlineDatePicker.date = Date().shiftDay(by: 1)
+        
+        if !isNewTask {
+            navigationItem.rightBarButtonItem = nil
+        } else {
+            taskNameField.becomeFirstResponder()
+        }
+        
     }
  
     override func viewWillAppear(_ animated: Bool) {
         super .viewWillAppear(animated)
         
-        if let task = task {
-            checkmarkButton.isSelected = task.completed
-            taskCategoryLabel.text = task.category?.name
-            taskPriorityLabel.text = task.priority?.name
-            tableView.reloadData()
-            taskInfoView.text = task.info
-            
-            if !isNewTask {
-                taskNameField.text = task.name
-            } else if !taskNameField.hasText {
-                taskNameField.text = task.name
-                taskNameField.becomeFirstResponder()
-            }
-            
-            if let deadline = task.deadline {
-                taskDeadlineField.text = Date.dateFormatter.string(from: deadline)
-                deadlineDatePicker.date = deadline
-            }
-            
-            if isNewTask {
-                deleteTaskButton.isHidden = true // FIXME: should delete section with button
-            }
+        let activeColor = UIColor.black
+        let inactiveColor = UIColor.lightGray
+        
+        checkmarkButton.isSelected = task.completed
+        taskNameField.text = task.name
+        
+        if let category = task.category?.name {
+            taskCategoryLabel.text = category
+            taskCategoryLabel.textColor = activeColor
+        } else {
+            taskCategoryLabel.text = "Not set"
+            taskCategoryLabel.textColor = inactiveColor
         }
         
+        if let priority = task.priority?.name {
+            taskPriorityLabel.text = priority
+            taskPriorityLabel.textColor = activeColor
+        } else {
+            taskPriorityLabel.text = "Not set"
+            taskPriorityLabel.textColor = inactiveColor
+        }
+        
+        if let deadline = task.deadline {
+            taskDeadlineField.text = Date.dateFormatter.string(from: deadline)
+            deadlineDatePicker.date = deadline
+        }
+        
+        taskInfoView.text = task.info ?? ""
+
         updateSaveButtonState()
     }
     
-    func updateSaveButtonState() {
-        if let count = taskNameField.text?.trimmingCharacters(in: .whitespaces).count,
-                    count > 0 {
-            navigationItem.rightBarButtonItem?.isEnabled = true
-        } else {
-            navigationItem.rightBarButtonItem?.isEnabled = false
-        }
-    }
-    
-    func updateDeadlineField(date: Date) {
-        taskDeadlineField.text = Date.dateFormatter.string(from: date)
-    }
-    
-    // MARK: Cell height
+    // MARK: TableView
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let largeCellHeight: CGFloat = 200
         let infoCellHeight: CGFloat = 66
         let normalCellHeight: CGFloat = 44
+        let infoIndexPath = IndexPath(row: 0, section: 4)
         
         switch indexPath {
-        case IndexPath(row: 1, section: 3):
+        case pickerIndexPath:
             return isPickerHidden ? 0 : largeCellHeight
-        case IndexPath(row: 0, section: 4):
+        case infoIndexPath:
             return infoCellHeight
         default:
             return normalCellHeight
         }
     }
     
-    // MARK: - Navigation
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return isNewTask ? 5 : 6 // hides delete section for new task
+    }
+    
+    // MARK: Navigation
+    
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) { // FIXME: validation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
         case "selectCategory":
             if let ovc = segue.destination as? OptionsController {
@@ -150,28 +205,7 @@ class TaskDetailsController: UITableViewController {
                 ovc.title = "Priority"
             }
         default:
-            task?.name = taskNameField.text?.trimmingCharacters(in: .whitespaces)
-            task?.category?.name = taskCategoryLabel.text
-            task?.priority?.name = taskPriorityLabel.text
-            
-            if taskDeadlineField.hasText {
-                task?.deadline = deadlineDatePicker.date
-            } else {
-                task?.deadline = nil
-            }
-            task?.info = taskInfoView.text
-        }
-
-    }
-}
-
-extension TaskDetailsController: UITextFieldDelegate {
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        switch textField {
-        case taskDeadlineField:
-            return false
-        default:
-            return true
+            return
         }
     }
 }

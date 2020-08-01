@@ -28,6 +28,15 @@ class TaskListController: UITableViewController {
         setupSearchController()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        if let indexPath = tableView.indexPathForSelectedRow { // save changes if back button tapped
+            taskDao.save()
+            
+            tableView.reloadRows(at: [indexPath], with: .fade)
+        }
+        
+        super .viewWillAppear(animated)
+    }
     
     // MARK: - Table view data source
 
@@ -63,47 +72,31 @@ class TaskListController: UITableViewController {
         let task = taskDao.items[indexPath.row]
         
         cell.taskNameLabel.text = task.name
-        cell.taskCategoryLabel.text = (task.category?.name ?? "")
+        cell.taskCategoryLabel.text = (task.category?.name ?? "No category")
         cell.checkmarkButton.isSelected = task.completed
         
-        if let priority = task.priority {
-            var priorityColor: UIColor?
+        let priorityIndex = task.priority?.index ?? -1
+        var priorityColor: UIColor?
             
-            switch priority.index {
-            case 0:
-                priorityColor = UIColor(named: "lowPriority")
-            case 1:
-                priorityColor = UIColor(named: "midPriority")
-            case 2:
-                priorityColor = UIColor(named: "hiPriority")
-            default:
-                priorityColor = UIColor.white
-            }
-            cell.taskPriorityLabel.backgroundColor = priorityColor
+        switch priorityIndex{
+        case 0:
+            priorityColor = UIColor(named: "lowPriority")
+        case 1:
+            priorityColor = UIColor(named: "midPriority")
+        case 2:
+            priorityColor = UIColor(named: "hiPriority")
+        default:
+            priorityColor = UIColor.white
         }
+        cell.taskPriorityLabel.backgroundColor = priorityColor
+        
         
         if let deadline = task.deadline {
-            let daysLeft = deadline.getOffset(from: Date().today)
-            var daysLeftString = ""
-            
-            switch daysLeft {
-            case 0:
-                daysLeftString = "Today"
-            case 1:
-                daysLeftString = "Tomorrow"
-            case -1:
-                daysLeftString = "\(daysLeft) day"
-                cell.taskDeadlineLabel.textColor = .red
-            case ..<0:
-                daysLeftString = "\(daysLeft) days"
-                cell.taskDeadlineLabel.textColor = .red
-            default:
-                daysLeftString = "\(daysLeft) days"
-            }
-            cell.taskDeadlineLabel.text = daysLeftString
+            cell.taskDeadlineLabel.attributedText = deadline.getOffset(from: Date().today)
+        } else {
+            cell.taskDeadlineLabel.text = ""
         }
-        
-        
+   
         return cell
     }
     
@@ -161,6 +154,7 @@ class TaskListController: UITableViewController {
             tdc.task = taskDao.items[index]
             
             tdc.navigationItem.title = "Task details"
+            
         case "newTask":
             guard let nc = segue.destination as? UINavigationController,
                 let tdc = nc.viewControllers.first as? TaskDetailsController else {
@@ -199,17 +193,11 @@ class TaskListController: UITableViewController {
             
             tableView.deleteRows(at: [indexPath], with: .fade)
         case "saveTask":
-            if let indexPath = tableView.indexPathForSelectedRow {
-                taskDao.save()
-                
-                tableView.reloadRows(at: [indexPath], with: .fade)
-            } else {
-                taskDao.addOrUpdate(newTask!)
-                
-                let indexPath = IndexPath(row: taskDao.items.count-1, section: taskListSection)
-                tableView.insertRows(at: [indexPath], with: .top)
-                
-            }
+            taskDao.addOrUpdate(newTask!)
+            
+            let indexPath = IndexPath(row: taskDao.items.count-1, section: taskListSection)
+            tableView.insertRows(at: [indexPath], with: .top)
+
         default:
             return
         }

@@ -15,7 +15,7 @@ class OptionsController: UITableViewController {
     let priorityDao = PriorityDaoImp.current
     
     var option: OptionType = .category
-    var task: Task?
+    var task: Task!
     var selectedIndexPath: IndexPath?
     
     var categories: [Category] = []
@@ -31,40 +31,57 @@ class OptionsController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard section > 0 else { return 1 }
         return option == .category ? categories.count : priorities.count
     }
 
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath)
+        let cell: UITableViewCell
         
-        switch option {
-        case .category:
-            cell.textLabel?.text = categories[indexPath.row].name
-            cell.accessoryType = categories[indexPath.row] == task?.category ? .checkmark : .none
-        case .priority:
-            cell.textLabel?.text = priorities[indexPath.row].name
-            cell.accessoryType = priorities[indexPath.row] == task?.priority ? .checkmark : .none
+        switch indexPath.section {
+        case 0:
+            cell = tableView.dequeueReusableCell(withIdentifier: "noneCell", for: indexPath)
+            switch option {
+            case .category:
+                cell.accessoryType = task.category == nil ? .checkmark : .none
+            case .priority:
+                cell.accessoryType = task.priority == nil ? .checkmark : .none
+            }
+            cell.textLabel?.text = "Not set"
+        default:
+            cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath)
+            
+            switch option {
+            case .category:
+                cell.textLabel?.text = categories[indexPath.row].name
+                cell.accessoryType = categories[indexPath.row] == task.category ? .checkmark : .none
+            case .priority:
+                cell.textLabel?.text = priorities[indexPath.row].name
+                cell.accessoryType = priorities[indexPath.row] == task.priority ? .checkmark : .none
+            }
         }
         
         if cell.accessoryType == .checkmark,
-                selectedIndexPath == nil {
+            selectedIndexPath == nil {
             selectedIndexPath = indexPath
         }
-      
+        
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let noneCellIndexPath = IndexPath(row: 0, section: 0)
+        
         switch option {
         case .category:
-            task?.category = categories[indexPath.row]
+            task.category = indexPath == noneCellIndexPath ? nil : categories[indexPath.row]
         case .priority:
-            task?.priority = priorities[indexPath.row]
+            task.priority = indexPath == noneCellIndexPath ? nil : priorities[indexPath.row]
         }
         
         if let previous = selectedIndexPath {
