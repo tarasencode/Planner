@@ -28,7 +28,7 @@ class PriorityDaoImp: Crud {
         save()
     }
     
-    func getAll() -> [Priority] {
+    func getAll(sortedBy: SortType) -> [Priority] {
         let fetchRequest: NSFetchRequest<Priority> = Priority.fetchRequest()
         
         do {

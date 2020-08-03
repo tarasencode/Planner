@@ -20,7 +20,10 @@ class TaskListController: UITableViewController {
     let quickTaskSection = 0
     let taskListSection = 1
     
+    var currentScopeIndex = 3
+    
     var shouldHideQuickTask = false
+    var searchBarActive = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +41,7 @@ class TaskListController: UITableViewController {
         if let indexPath = tableView.indexPathForSelectedRow { // save changes if back button tapped
             taskDao.save()
             
-            tableView.reloadRows(at: [indexPath], with: .fade)
+            updateTable()
         }
         
         super .viewWillAppear(animated)
@@ -53,6 +56,18 @@ class TaskListController: UITableViewController {
         } else {
 
         }
+    }
+    
+    func updateTable() {
+        let sortType = SortType(rawValue: currentScopeIndex) ?? .none
+        if searchBarActive,
+                let text = searchController.searchBar.text,
+                text.count > 0 {
+            _ = taskDao.search(text: text, sortedBy: sortType)
+        } else {
+            _ = taskDao.getAll(sortedBy: sortType)
+        }
+        tableView.reloadData()
     }
     
     // MARK: - Table view data source
@@ -211,8 +226,7 @@ class TaskListController: UITableViewController {
         case "saveTask":
             taskDao.addOrUpdate(newTask!)
             
-            let indexPath = IndexPath(row: taskDao.items.count-1, section: taskListSection)
-            tableView.insertRows(at: [indexPath], with: .top)
+            updateTable()
 
         default:
             return
@@ -222,13 +236,12 @@ class TaskListController: UITableViewController {
 }
 // MARK: CellDelegate
 extension TaskListController: TaskListCellDelegate, QuickTaskCellDelegate {
-    func enterButtonTapped(taskName: String) {
+    func enterButtonTapped(taskName: String) {  // creating quick task
         newTask = Task(context: taskDao.context)
         newTask?.name = taskName
         taskDao.addOrUpdate(newTask!)
         
-        let indexPath = IndexPath(row: taskDao.items.count-1, section: taskListSection)
-        tableView.insertRows(at: [indexPath], with: .top)
+        updateTable()
         
     }
     
@@ -250,17 +263,28 @@ extension TaskListController: UISearchBarDelegate, UISearchResultsUpdating {
         return true
     }
     
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBarActive = true
+    }
+    
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         guard let text = searchController.searchBar.text?.trimmingCharacters(in: .whitespaces),
                 text.count > 0  else {return}
-            _ = taskDao.search(text: text)
-            tableView.reloadData()
+            updateTable()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        _ = taskDao.getAll()
         shouldHideQuickTask = false
-        tableView.reloadData()
+        updateTable()
+        
+        searchBarActive = false
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        guard selectedScope != currentScopeIndex else {return}
+        
+        currentScopeIndex = selectedScope
+        updateTable()
     }
     
     func setupSearchController() {
@@ -271,6 +295,8 @@ extension TaskListController: UISearchBarDelegate, UISearchResultsUpdating {
         searchController.searchBar.delegate = self
         searchController.searchResultsUpdater = self
         
-        searchController.searchBar.showsScopeBar = false
+        searchController.searchBar.showsScopeBar = true
+        searchController.searchBar.scopeButtonTitles = ["a-z", "priority", "date", "default"]
+        searchController.searchBar.selectedScopeButtonIndex = currentScopeIndex
     }
 }

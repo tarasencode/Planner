@@ -9,5 +9,5 @@
 import Foundation
 
 protocol TaskDao: Crud {
-    func search(text: String) -> [Item]
+    func search(text: String, sortedBy: SortType) -> [Item]
 }

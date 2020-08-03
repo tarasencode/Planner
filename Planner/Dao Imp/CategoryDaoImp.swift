@@ -28,7 +28,7 @@ class CategoryDaoImp: Crud {
         save() 
     }
     
-    func getAll() -> [Category] {
+    func getAll(sortedBy: SortType) -> [Category] {
         let fetchRequest: NSFetchRequest<Category> = Category.fetchRequest()
 
         do {

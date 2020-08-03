@@ -15,13 +15,14 @@ class TaskDaoImp: TaskDao {
     
     var items: [Task]!
     
-//    private let categoryDao = CategoryDaoImp.current
-//    private let priorityDao = PriorityDaoImp.current
+    let sortByPriority = NSSortDescriptor(key: #keyPath(Task.priority.index), ascending: false)
+    let sortByDate = NSSortDescriptor(key: #keyPath(Task.deadline), ascending: false)
+    let sortByName = NSSortDescriptor(key: #keyPath(Task.name), ascending: true, selector: #selector(NSString.caseInsensitiveCompare))
     
     // singleton
     static let current = TaskDaoImp()
     private init() {
-        _ = getAll() // FIXME: stupid 
+        _ = getAll(sortedBy: .complex) // FIXME: stupid
     }
     
     
@@ -30,13 +31,25 @@ class TaskDaoImp: TaskDao {
         if !items.contains(task) {
             items.append(task)
         }
-        
         save()
     }
     
-    func getAll() -> [Task] {
+    func getAll(sortedBy: SortType) -> [Task] {
         let fetchRequest: NSFetchRequest<Task> = Task.fetchRequest()
         
+        switch sortedBy {
+        case .date:
+            fetchRequest.sortDescriptors = [sortByDate]
+        case .name:
+            fetchRequest.sortDescriptors = [sortByName]
+        case .priority:
+            fetchRequest.sortDescriptors = [sortByPriority]
+        case .complex:
+            fetchRequest.sortDescriptors = [sortByPriority, sortByDate, sortByName]
+        default:
+            fetchRequest.sortDescriptors = []
+        }
+
         do {
             items = try context.fetch(fetchRequest)
         } catch {
@@ -51,8 +64,20 @@ class TaskDaoImp: TaskDao {
         save()
     }
     
-    func search(text: String) -> [Task] {
+    func search(text: String, sortedBy: SortType) -> [Task] {
         let fetchRequest: NSFetchRequest<Task> = Task.fetchRequest()
+        switch sortedBy {
+        case .date:
+            fetchRequest.sortDescriptors = [sortByDate]
+        case .name:
+            fetchRequest.sortDescriptors = [sortByName]
+        case .priority:
+            fetchRequest.sortDescriptors = [sortByPriority]
+        case .complex:
+            fetchRequest.sortDescriptors = [sortByPriority, sortByDate, sortByName]            
+        default:
+            fetchRequest.sortDescriptors = []
+        }
         
         var params = [Any]()
         var sql = "name CONTAINS[c] %@"

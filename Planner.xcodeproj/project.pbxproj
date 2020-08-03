@@ -13,6 +13,7 @@
 		7C1F3A7824CEAD3800FB7507 /* CategoryDaoImp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F3A7724CEAD3800FB7507 /* CategoryDaoImp.swift */; };
 		7C1F3A7A24CEB17B00FB7507 /* PriorityDaoImp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F3A7924CEB17B00FB7507 /* PriorityDaoImp.swift */; };
 		7C1F3A7C24CEB7A700FB7507 /* TaskDaoImp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F3A7B24CEB7A700FB7507 /* TaskDaoImp.swift */; };
+		7C389F4024D81B5E004D8513 /* SortType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C389F3F24D81B5E004D8513 /* SortType.swift */; };
 		7C46C40D24D41B9500C74467 /* QuickTaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C46C40C24D41B9500C74467 /* QuickTaskCell.swift */; };
 		7C46C40F24D4264100C74467 /* QuickTaskCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C46C40E24D4264100C74467 /* QuickTaskCellDelegate.swift */; };
 		7C46C41124D45E8700C74467 /* TaskDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C46C41024D45E8700C74467 /* TaskDao.swift */; };
@@ -39,6 +40,7 @@
 		7C1F3A7724CEAD3800FB7507 /* CategoryDaoImp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryDaoImp.swift; sourceTree = "<group>"; };
 		7C1F3A7924CEB17B00FB7507 /* PriorityDaoImp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriorityDaoImp.swift; sourceTree = "<group>"; };
 		7C1F3A7B24CEB7A700FB7507 /* TaskDaoImp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDaoImp.swift; sourceTree = "<group>"; };
+		7C389F3F24D81B5E004D8513 /* SortType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortType.swift; sourceTree = "<group>"; };
 		7C46C40C24D41B9500C74467 /* QuickTaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickTaskCell.swift; sourceTree = "<group>"; };
 		7C46C40E24D4264100C74467 /* QuickTaskCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickTaskCellDelegate.swift; sourceTree = "<group>"; };
 		7C46C41024D45E8700C74467 /* TaskDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDao.swift; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 			isa = PBXGroup;
 			children = (
 				7C589EBE24D2D06E000BDE87 /* OptionType.swift */,
+				7C389F3F24D81B5E004D8513 /* SortType.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -329,6 +332,7 @@
 				7C51BB3524CC504F002147E2 /* TaskListCell.swift in Sources */,
 				7C589EC324D32236000BDE87 /* TaskListCellDelegate.swift in Sources */,
 				7C51BB3824CC598E002147E2 /* Planner.xcdatamodeld in Sources */,
+				7C389F4024D81B5E004D8513 /* SortType.swift in Sources */,
 				7C51BB1A24CC086F002147E2 /* AppDelegate.swift in Sources */,
 				7C46C41124D45E8700C74467 /* TaskDao.swift in Sources */,
 				7C589EBC24D2CC53000BDE87 /* OptionsController.swift in Sources */,

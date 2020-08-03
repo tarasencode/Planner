@@ -24,8 +24,8 @@ class OptionsController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        categories = categoryDao.getAll()
-        priorities = priorityDao.getAll()
+        categories = categoryDao.getAll(sortedBy: .name)
+        priorities = priorityDao.getAll(sortedBy: .name) // FIXME: bad!
     }
 
     // MARK: - Table view data source

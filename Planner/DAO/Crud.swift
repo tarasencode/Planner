@@ -17,7 +17,7 @@ protocol Crud{
     
     func addOrUpdate(_ category: Item)
     
-    func getAll() -> [Item]
+    func getAll(sortedBy: SortType) -> [Item]
     
     func delete(_ category: Item)
     
